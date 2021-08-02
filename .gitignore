@@ -37,7 +37,7 @@ GenshinImpactDamageCalculatorServer/.vscode/
 
 node_modules
 /genshin_impact_damage_calculator/dist
-genshin_impact_damage_calculator/node_modules.nosync/
+genshin_impact_damage_calculator/node_modules.nosync/*
 
 # local env files
 genshin_impact_damage_calculator/.env.local
