@@ -1,0 +1,33 @@
+GenshinImpactDamageCalculatorServer/HELP.md
+GenshinImpactDamageCalculatorServer/target/
+!GenshinImpactDamageCalculatorServer/.mvn/wrapper/maven-wrapper.jar
+!GenshinImpactDamageCalculatorServer/**/src/main/**/target/
+!GenshinImpactDamageCalculatorServer/**/src/test/**/target/
+
+### STS ###
+GenshinImpactDamageCalculatorServer/.apt_generated
+GenshinImpactDamageCalculatorServer/.classpath
+GenshinImpactDamageCalculatorServer/.factorypath
+GenshinImpactDamageCalculatorServer/.project
+GenshinImpactDamageCalculatorServer/.settings
+GenshinImpactDamageCalculatorServer/.springBeans
+GenshinImpactDamageCalculatorServer/.sts4-cache
+
+### IntelliJ IDEA ###
+GenshinImpactDamageCalculatorServer/.idea
+GenshinImpactDamageCalculatorServer/*.iws
+GenshinImpactDamageCalculatorServer/*.iml
+GenshinImpactDamageCalculatorServer/*.ipr
+
+### NetBeans ###
+/GenshinImpactDamageCalculatorServer/nbproject/private/
+/GenshinImpactDamageCalculatorServer/nbbuild/
+/GenshinImpactDamageCalculatorServer/dist/
+/GenshinImpactDamageCalculatorServer/nbdist/
+/GenshinImpactDamageCalculatorServer/.nb-gradle/
+GenshinImpactDamageCalculatorServer/build/
+!GenshinImpactDamageCalculatorServer/**/src/main/**/build/
+!GenshinImpactDamageCalculatorServer/**/src/test/**/build/
+
+### VS Code ###
+GenshinImpactDamageCalculatorServer/.vscode/
