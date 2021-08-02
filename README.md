@@ -1,1 +1,7 @@
-# GenshinImpactDamageCalculator
+# 原神伤害计算器
+
+此项目计划基于Springboot和Vue.js开发。
+
+目标为比较方便且全面的伤害计算器。
+
+​	
