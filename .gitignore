@@ -31,3 +31,7 @@ GenshinImpactDamageCalculatorServer/build/
 
 ### VS Code ###
 GenshinImpactDamageCalculatorServer/.vscode/
+
+### DS_Store ###
+.DS_Store
+GenshinImpactDamageCalculatorServer/.DS_Store
