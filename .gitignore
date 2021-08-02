@@ -34,3 +34,26 @@ GenshinImpactDamageCalculatorServer/.vscode/
 
 ### DS_Store ###
 **/.DS_Store
+
+node_modules
+/genshin_impact_damage_calculator/dist
+genshin_impact_damage_calculator/node_modules.nosync
+
+# local env files
+genshin_impact_damage_calculator/.env.local
+genshin_impact_damage_calculator/.env.*.local
+
+# Log files
+genshin_impact_damage_calculator/npm-debug.log*
+genshin_impact_damage_calculator/yarn-debug.log*
+genshin_impact_damage_calculator/yarn-error.log*
+genshin_impact_damage_calculator/pnpm-debug.log*
+
+# Editor directories and files
+genshin_impact_damage_calculator/.idea
+genshin_impact_damage_calculator/.vscode
+genshin_impact_damage_calculator/*.suo
+genshin_impact_damage_calculator/*.ntvs*
+genshin_impact_damage_calculator/*.njsproj
+genshin_impact_damage_calculator/*.sln
+genshin_impact_damage_calculator/*.sw?
