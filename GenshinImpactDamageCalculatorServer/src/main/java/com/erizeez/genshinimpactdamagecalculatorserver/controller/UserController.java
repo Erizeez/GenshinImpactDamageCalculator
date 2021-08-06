@@ -6,6 +6,7 @@ import com.erizeez.genshinimpactdamagecalculatorserver.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,6 +24,13 @@ public class UserController {
         if (register_form.getUserName() != null
                 && register_form.getPassWord() != null
                 && register_form.getNickName() != null) {
+            if (userService.selectUserByUserName(register_form.getUserName()) != null) {
+                response.put("msg", "Repeat username is not permitted.");
+                response.put("success", "-1");
+
+                return response;
+            }
+
             userService.insertUser(register_form);
 
             if (userService.selectUserByUserName(register_form.getUserName()) == null) {
@@ -39,4 +47,6 @@ public class UserController {
 
         return response;
     }
+
+
 }

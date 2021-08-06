@@ -6,7 +6,8 @@
         <result column="uid" jdbcType="INTEGER" property="uID"/>
         <result column="username" jdbcType="VARCHAR" property="userName"/>
         <result column="password" jdbcType="VARCHAR" property="passWord"/>
-        <result column="nickname" jdbcType="DATE" property="nickName"/>
+        <result column="nickname" jdbcType="VARCHAR" property="nickName"/>
+        <result column="login_time" jdbcType="DATE" property="loginTime"/>
     </resultMap>
 
     <select id="selectUserByUID" resultType="com.erizeez.genshinimpactdamagecalculatorserver.entity.User">
@@ -28,15 +29,16 @@
     </select>
 
     <insert id="insertUser">
-        insert into users (username, password, nickname)
-        values (#{userName}, #{passWord}, #{nickName});
+        insert into users (username, password, nickname, login_time)
+        values (#{userName}, #{passWord}, #{nickName}, #{loginTime});
     </insert>
 
     <update id="updateUser">
         update users
         set username = #{userName},
             password = #{passWord},
-            nickname = #{nickName}
+            nickname = #{nickName},
+            login_time = #{loginTime}
         where uid = #{uID};
     </update>
 

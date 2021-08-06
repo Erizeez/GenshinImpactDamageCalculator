@@ -24,12 +24,12 @@ public class UserService {
 
     public void insertUser(User user) {
         userRepository.insertUser(user.getUserName(),
-                user.getPassWord(), user.getNickName());
+                user.getPassWord(), user.getNickName(), user.getLoginTime());
     }
 
     public void updateUser(User user) {
         userRepository.updateUser(user.getuID(), user.getUserName(),
-                user.getPassWord(), user.getNickName());
+                user.getPassWord(), user.getNickName(), user.getLoginTime());
     }
 
     public void deleteUser(Integer uID) {
