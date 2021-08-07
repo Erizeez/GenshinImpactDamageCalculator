@@ -80,7 +80,7 @@ public class UserController {
             if (user == null){
                 map.put("msg", "There is no user.");
                 map.put("result", "-1");
-            } else if (user.getPassWord() != login_form.getPassWord()){
+            } else if (!user.getPassWord().equals(login_form.getPassWord())){
                 map.put("msg", "Password error.");
                 map.put("result", "-1");
             } else {
