@@ -63,16 +63,25 @@ public class UserController {
     public Map<String, Object> login(@RequestBody User login_form, HttpServletResponse response) throws IOException {
         Map<String, Object> map = new HashMap<>();
 
-        if (login_form.getUserName() != null && login_form.getPassWord() != null) {
-            if (userService.selectUserByUserName(login_form.getUserName()) == null){
-                map.put("msg", "There is no user named " + login_form.getUserName());
+        if (login_form.getPassWord() != null) {
+            User user = null;
+            if (login_form.getUserName() != null) {
+                user = userService.selectUserByUserName(login_form.getUserName());
+            } else if (login_form.getuID() != null) {
+                user = userService.selectUserByUID(login_form.getuID());
+            } else {
+                map.put("msg", "Login form is incomplete.");
                 map.put("result", "-1");
-            } else if (userService.selectUserByUserName(login_form.getUserName()).getPassWord() != login_form.getPassWord()){
+                return map;
+            }
+
+            if (user == null){
+                map.put("msg", "There is no user.");
+                map.put("result", "-1");
+            } else if (user.getPassWord() != login_form.getPassWord()){
                 map.put("msg", "Password error.");
                 map.put("result", "-1");
             } else {
-                User user = userService.selectUserByUserName(login_form.getUserName());
-
                 Cookie cookie = new Cookie("token", TokenUtil.makeToken(user));
                 cookie.setPath("/");
                 cookie.setMaxAge(TokenUtil.EXPIRE_TIME_MIN * 60);
