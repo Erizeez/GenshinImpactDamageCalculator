@@ -30,11 +30,12 @@ import java.util.*;
 @Component
 public class TokenUtil {
     private static UserService userService;
-    // 过期时间: 2h
-    private static final int EXPIRE_TIME_MIN = 2 * 60;
     private static final String privateKeyLoc = "classpath:keys/private.pem";
     private static final String publicKeyLoc = "classpath:keys/public.pem";
     private static final String issuer = "org.erizeez";
+
+    // 过期时间: 12h
+    public static final int EXPIRE_TIME_MIN = 12 * 60;
 
     @Autowired
     public void setUserService(UserService userService) {
