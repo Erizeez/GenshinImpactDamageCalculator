@@ -13,8 +13,8 @@ public class TokenInterceptorConfigurer implements WebMvcConfigurer {
         InterceptorRegistration registration = registry.addInterceptor(new TokenInterceptor());
         registration.addPathPatterns("/**");
         registration.excludePathPatterns(
-
-                "/user/register"
+                "/user/register",
+                "/user/login"
         );
     }
 }
