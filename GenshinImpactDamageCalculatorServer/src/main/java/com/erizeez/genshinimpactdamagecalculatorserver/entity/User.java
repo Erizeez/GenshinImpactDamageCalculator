@@ -1,5 +1,8 @@
 package com.erizeez.genshinimpactdamagecalculatorserver.entity;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.sql.Timestamp;
 import java.util.Date;
 
 public class User {
@@ -7,11 +10,7 @@ public class User {
     private String userName;
     private String passWord;
     private String nickName;
-    private Date loginTime;
-
-    public User() {
-        this.loginTime = new Date();
-    }
+    private Timestamp loginTime;
 
     public Integer getuID() {
         return uID;
@@ -45,11 +44,11 @@ public class User {
         this.nickName = nickName;
     }
 
-    public Date getLoginTime() {
+    public Timestamp getLoginTime() {
         return loginTime;
     }
 
-    public void setLoginTime(Date loginTime) {
+    public void setLoginTime(Timestamp loginTime) {
         this.loginTime = loginTime;
     }
 

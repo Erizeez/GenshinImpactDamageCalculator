@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,6 +37,7 @@ public class UserController {
                 return map;
             }
 
+            register_form.setLoginTime(new Timestamp(new Date().getTime()));
             userService.insertUser(register_form);
             User user = userService.selectUserByUserName(register_form.getUserName());
 
@@ -84,6 +86,14 @@ public class UserController {
             map.put("msg", "Login form is incomplete.");
             map.put("result", "-1");
         }
+
+        return map;
+    }
+
+    @RequestMapping(value = "/test", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> test(@RequestBody User login_form, HttpServletResponse response) throws IOException {
+        Map<String, Object> map = new HashMap<>();
 
         return map;
     }

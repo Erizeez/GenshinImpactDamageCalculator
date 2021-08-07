@@ -77,7 +77,6 @@ public class TokenUtil {
         }
     }
 
-
     public static String makeToken(User user) throws IOException {
         PrivateKey privateKey = getPrivateKey(getPrivateKeyString());
         JwtClaims claims = new JwtClaims();
@@ -90,7 +89,7 @@ public class TokenUtil {
         claims.setClaim("uID", user.getuID().toString());
         claims.setClaim("userName", user.getUserName());
         claims.setClaim("nickName", user.getNickName());
-        claims.setClaim("loginTime", user.getLoginTime().toString().hashCode());
+        claims.setClaim("loginTime", user.getLoginTime().toString());
         claims.setNotBefore(NumericDate.now());
 
         // Generate the payload
@@ -123,7 +122,7 @@ public class TokenUtil {
             JwtClaims claims = jwtConsumer.processToClaims(token);
             User nowUser = userService.selectUserByUID(
                     Integer.parseInt(claims.getClaimValue("uID").toString()));
-            return nowUser.getLoginTime().toString().hashCode() == Integer.parseInt(claims.getClaimValue("loginTime")
+            return nowUser.getLoginTime().toString().equals(claims.getClaimValue("loginTime")
                     .toString());
         } catch (Exception e) {
             return false;
