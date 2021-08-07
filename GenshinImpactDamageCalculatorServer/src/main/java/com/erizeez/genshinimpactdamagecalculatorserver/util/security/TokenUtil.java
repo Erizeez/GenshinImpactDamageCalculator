@@ -26,14 +26,15 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.*;
-//import java.util.Base64;
 
 @Component
 public class TokenUtil {
     private static UserService userService;
     // 过期时间: 2h
     private static final int EXPIRE_TIME_MIN = 2 * 60;
-    // 私钥
+    private static final String privateKeyLoc = "classpath:keys/private.pem";
+    private static final String publicKeyLoc = "classpath:keys/public.pem";
+    private static final String issuer = "org.erizeez";
 
     @Autowired
     public void setUserService(UserService userService) {
@@ -41,12 +42,12 @@ public class TokenUtil {
     }
 
     public static String getPrivateKeyString() throws IOException {
-        File file = ResourceUtils.getFile("classpath:key/private.pem");
+        File file = ResourceUtils.getFile(privateKeyLoc);
         return FileUtils.readFileToString(file, "utf-8");
     }
 
     public static String getPublicKeyString() throws IOException {
-        File file = ResourceUtils.getFile("classpath:key/public.pem");
+        File file = ResourceUtils.getFile(publicKeyLoc);
         return FileUtils.readFileToString(file, "utf-8");
     }
 
@@ -80,15 +81,15 @@ public class TokenUtil {
         PrivateKey privateKey = getPrivateKey(getPrivateKeyString());
         JwtClaims claims = new JwtClaims();
         // issuer
-        claims.setIssuer("org.harcorpt");
+        claims.setIssuer(issuer);
         // sign at
         claims.setIssuedAtToNow();
         // expiration time
         claims.setExpirationTimeMinutesInTheFuture(EXPIRE_TIME_MIN);
-        claims.setClaim("uid", user.getuID().toString());
-        claims.setClaim("username", user.getUserName());
-        claims.setClaim("nickname", user.getNickName());
-        claims.setClaim("login_time", user.getLoginTime().toString().hashCode());
+        claims.setClaim("uID", user.getuID().toString());
+        claims.setClaim("userName", user.getUserName());
+        claims.setClaim("nickName", user.getNickName());
+        claims.setClaim("loginTime", user.getLoginTime().toString().hashCode());
         claims.setNotBefore(NumericDate.now());
 
         // Generate the payload
@@ -112,7 +113,7 @@ public class TokenUtil {
             PublicKey publicKey = getPublicKey(getPublicKeyString());
 
             JwtConsumer jwtConsumer = new JwtConsumerBuilder()
-                    .setExpectedIssuer("org.harcorpt")
+                    .setExpectedIssuer(issuer)
                     .setRequireExpirationTime()
                     .setMaxFutureValidityInMinutes(EXPIRE_TIME_MIN)
                     .setRequireIssuedAt()
@@ -120,8 +121,8 @@ public class TokenUtil {
                     .build();
             JwtClaims claims = jwtConsumer.processToClaims(token);
             User nowUser = userService.selectUserByUID(
-                    Integer.parseInt(claims.getClaimValue("uid").toString()));
-            return nowUser.getLoginTime().toString().hashCode() == Integer.parseInt(claims.getClaimValue("login_time")
+                    Integer.parseInt(claims.getClaimValue("uID").toString()));
+            return nowUser.getLoginTime().toString().hashCode() == Integer.parseInt(claims.getClaimValue("loginTime")
                     .toString());
         } catch (Exception e) {
             return false;
@@ -134,7 +135,7 @@ public class TokenUtil {
             PublicKey publicKey = getPublicKey(getPublicKeyString());
 
             JwtConsumer jwtConsumer = new JwtConsumerBuilder()
-                    .setExpectedIssuer("org.harcorpt")
+                    .setExpectedIssuer(issuer)
                     .setRequireExpirationTime()
                     .setMaxFutureValidityInMinutes(EXPIRE_TIME_MIN)
                     .setRequireIssuedAt()
@@ -142,38 +143,17 @@ public class TokenUtil {
                     .build();
             JwtClaims claims = jwtConsumer.processToClaims(token);
             User nowUser = userService.selectUserByUID(
-                    Integer.parseInt(claims.getClaimValue("uid").toString()));
+                    Integer.parseInt(claims.getClaimValue("uID").toString()));
             if (nowUser.getLoginTime().toString().hashCode() !=
-                    Integer.parseInt(claims.getClaimValue("login_time")
+                    Integer.parseInt(claims.getClaimValue("loginTime")
                             .toString())) {
                 return new HashMap<>();
             }
-            map.put("uid", Integer.parseInt(claims.getClaimValue("uid").toString()));
-            map.put("username", claims.getClaimValue("username").toString());
+            map.put("uID", Integer.parseInt(claims.getClaimValue("uID").toString()));
+            map.put("userName", claims.getClaimValue("userName").toString());
             return map;
         } catch (Exception e) {
             return new HashMap<>();
-        }
-    }
-
-    public static void main(String[] args) {
-        try {
-            Calendar cal = Calendar.getInstance();
-            cal.set(Calendar.YEAR, 2000);
-            cal.set(Calendar.MONTH, Calendar.JANUARY);
-            cal.set(Calendar.DAY_OF_MONTH, 1);
-            Date dateRepresentation = cal.getTime();
-
-            User user = new User();
-            user.setLoginTime(dateRepresentation);
-            user.setUserName("erizeez");
-            user.setNickName("Erizeez");
-            user.setuID(11111);
-            String token = makeToken(user);
-            System.out.println("token:" + token);
-            System.out.println("result:" + verifyToken(token));
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 }

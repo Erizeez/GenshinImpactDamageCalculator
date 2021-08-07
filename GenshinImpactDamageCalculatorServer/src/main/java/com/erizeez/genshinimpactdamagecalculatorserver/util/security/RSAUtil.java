@@ -20,7 +20,7 @@ public class RSAUtil {
     private final static int KEY_SIZE = 2048;
 
     @SuppressWarnings("static-access")
-    public static void generateKeyPair() {
+    public static void generateKeyPair(String publicKeyLoc, String privateKeyLoc) {
         KeyPairGenerator keyPairGenerator = null;
         try {
             keyPairGenerator = keyPairGenerator.getInstance("RSA");
@@ -36,8 +36,8 @@ public class RSAUtil {
         String publicKeyString = Base64.encode(publicKey.getEncoded());
         String privateKeyString = Base64.encode(privateKey.getEncoded());
         try {
-            BufferedWriter publicBufferWriter = new BufferedWriter(new FileWriter(ResourceUtils.getFile("classpath:key/public.pem")));
-            BufferedWriter privateBufferWriter = new BufferedWriter(new FileWriter(ResourceUtils.getFile("classpath:key/private.pem")));
+            BufferedWriter publicBufferWriter = new BufferedWriter(new FileWriter(ResourceUtils.getFile(publicKeyLoc)));
+            BufferedWriter privateBufferWriter = new BufferedWriter(new FileWriter(ResourceUtils.getFile(privateKeyLoc)));
             publicBufferWriter.write(publicKeyString);
             privateBufferWriter.write(privateKeyString);
             publicBufferWriter.flush();
@@ -65,8 +65,12 @@ public class RSAUtil {
         }
     }
 
-    public static String getPublicKeyString() throws FileNotFoundException {
-        return readKeyStringFromFile(ResourceUtils.getFile("classpath:key/public.pem"));
+    public static String getPublicKeyString(String publicKeyLoc) throws FileNotFoundException {
+        return readKeyStringFromFile(ResourceUtils.getFile(publicKeyLoc));
+    }
+
+    public static String getPrivateKeyString(String privateKeyLoc) throws FileNotFoundException {
+        return readKeyStringFromFile(ResourceUtils.getFile(privateKeyLoc));
     }
 
     public static RSAPublicKey getPublicKeyFromString(String publicKeyStr) {
@@ -141,7 +145,7 @@ public class RSAUtil {
 
     public static String decryptByPrivateKey(String cipherText, RSAPrivateKey privateKey) throws Exception {
         if (privateKey == null) {
-            throw new Exception("私钥为空！");
+            throw new Exception("Null private key");
         }
         Cipher cipher;
         try {
@@ -156,24 +160,24 @@ public class RSAUtil {
     }
 
     public static void main(String[] args) throws Exception {
-        RSAUtil.generateKeyPair();
+        RSAUtil.generateKeyPair("classpath:keys/public.pem", "classpath:keys/private.pem");
 
-        String publicKey = RSAUtil.readKeyStringFromFile(ResourceUtils.getFile("classpath:keys/public.pem"));
-        String privateKey = RSAUtil.readKeyStringFromFile(ResourceUtils.getFile("classpath:keys/private.pem"));
-        System.out.println("publicKey：" + publicKey);
-        System.out.println("privateKey：" + privateKey);
+        String publicKey = RSAUtil.getPublicKeyString("classpath:keys/public.pem");
+        String privateKey = RSAUtil.getPrivateKeyString("classpath:keys/private.pem");
+        System.out.println("publicKey: " + publicKey);
+        System.out.println("privateKey: " + privateKey);
 
         System.out.println("---------------------------------------------");
 
         String sign = RSAUtil.signByPrivateKey("测试加签", privateKey);
-        System.out.println("sign：" + sign);
-        System.out.println("验签：" + RSAUtil.verifySignByPublicKey("测试加签", publicKey, sign));
+        System.out.println("sign:" + sign);
+        System.out.println("验签:" + RSAUtil.verifySignByPublicKey("测试加签", publicKey, sign));
 
         System.out.println("---------------------------------------------");
 
         String cipherText = RSAUtil.encryptByPublicKey("测试加密明文数据", RSAUtil.getPublicKeyFromString(publicKey));
-        System.out.println("cipherText：" + cipherText);
+        System.out.println("cipherText:" + cipherText);
         String plainText = RSAUtil.decryptByPrivateKey(cipherText, RSAUtil.getPrivateKeyFromString(privateKey));
-        System.out.println("plainText：" + plainText);
+        System.out.println("plainText:" + plainText);
     }
 }
