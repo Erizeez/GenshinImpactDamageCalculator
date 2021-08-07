@@ -31,7 +31,7 @@ public class UserController {
                 && register_form.getNickName() != null) {
             if (userService.selectUserByUserName(register_form.getUserName()) != null) {
                 map.put("msg", "Repeat username is not permitted.");
-                map.put("success", "-1");
+                map.put("result", "-1");
 
                 return map;
             }
@@ -41,18 +41,18 @@ public class UserController {
 
             if (user == null) {
                 map.put("msg", "Fail to insert new user.");
-                map.put("success", "-1");
+                map.put("result", "-1");
             } else {
                 Cookie cookie = new Cookie("token", TokenUtil.makeToken(user));
                 cookie.setPath("/");
                 cookie.setMaxAge(TokenUtil.EXPIRE_TIME_MIN * 60);
                 response.addCookie(cookie);
                 map.put("msg", "Register process is complete.");
-                map.put("success", "0");
+                map.put("result", "0");
             }
         } else {
             map.put("msg", "Register form is incomplete.");
-            map.put("success", "-1");
+            map.put("result", "-1");
         }
 
         return map;

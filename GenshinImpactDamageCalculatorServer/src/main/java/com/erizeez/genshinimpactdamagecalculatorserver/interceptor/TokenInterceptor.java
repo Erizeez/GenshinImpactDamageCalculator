@@ -20,7 +20,7 @@ public class TokenInterceptor implements HandlerInterceptor {
         } else {
             Map<String, String> map = new HashMap<>();
             map.put("msg", "Invalid token.");
-            map.put("success", "-1");
+            map.put("result", "-1");
             response.getWriter().write(JSONObject.toJSONString(map));
             return false;
         }
