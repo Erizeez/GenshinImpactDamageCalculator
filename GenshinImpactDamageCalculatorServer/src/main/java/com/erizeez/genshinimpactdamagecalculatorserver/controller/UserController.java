@@ -144,4 +144,15 @@ public class UserController {
 
         return map;
     }
+
+    @RequestMapping(value = "/update/info", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> updateInfo(@RequestBody User userInfo, HttpServletRequest request, HttpServletResponse response) throws IOException{
+        Map<String, Object> map = new HashMap<>();
+
+        
+
+        return map;
+    }
+
 }
