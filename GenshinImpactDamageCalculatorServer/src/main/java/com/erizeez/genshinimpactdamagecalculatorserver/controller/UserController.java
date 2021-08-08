@@ -149,7 +149,7 @@ public class UserController {
 
     @RequestMapping(value = "/update/info", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> updateInfo(@RequestBody Map<String, Object> userInfo, HttpServletRequest request, HttpServletResponse response) throws IOException{
+    public Map<String, Object> updateInfo(@RequestBody Map<String, String> userInfo, HttpServletRequest request, HttpServletResponse response) throws IOException{
         Map<String, Object> map = new HashMap<>();
         User user = null;
 
@@ -159,7 +159,7 @@ public class UserController {
 
         if (userInfo.get("nickName") != null) {
             user = userService.selectUserByUID((int)userMap.get("uID"));
-            user.setNickName(userInfo.getNickName());
+            user.setNickName(userInfo.get("nickName"));
             userService.updateUser(user);
             Cookie cookie = new Cookie("token", TokenUtil.makeToken(user));
             cookie.setPath("/");
