@@ -144,9 +144,8 @@ public class TokenUtil {
             JwtClaims claims = jwtConsumer.processToClaims(token);
             User nowUser = userService.selectUserByUID(
                     Integer.parseInt(claims.getClaimValue("uID").toString()));
-            if (nowUser.getLoginTime().toString().hashCode() !=
-                    Integer.parseInt(claims.getClaimValue("loginTime")
-                            .toString())) {
+            if (!nowUser.getLoginTime().toString().equals(
+                    claims.getClaimValue("loginTime").toString())) {
                 return new HashMap<>();
             }
             map.put("uID", Integer.parseInt(claims.getClaimValue("uID").toString()));
