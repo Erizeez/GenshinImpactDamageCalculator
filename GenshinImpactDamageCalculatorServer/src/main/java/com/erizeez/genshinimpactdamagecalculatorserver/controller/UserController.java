@@ -1,7 +1,10 @@
 package com.erizeez.genshinimpactdamagecalculatorserver.controller;
 
 import com.erizeez.genshinimpactdamagecalculatorserver.entity.User;
+import com.erizeez.genshinimpactdamagecalculatorserver.interceptor.TokenInterceptor;
 import com.erizeez.genshinimpactdamagecalculatorserver.service.UserService;
+import com.erizeez.genshinimpactdamagecalculatorserver.util.http.CookieUtil;
+import org.jose4j.json.internal.json_simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,8 +15,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.erizeez.genshinimpactdamagecalculatorserver.util.security.TokenUtil;
+import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
@@ -109,10 +114,38 @@ public class UserController {
 
     @RequestMapping(value = "/update/password", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> updatePassword(@RequestBody User update_form, HttpServletResponse response) throws IOException{
+    public Map<String, Object> updatePassword(@RequestBody Map<String, Object> password, HttpServletRequest request, HttpServletResponse response) throws IOException{
         Map<String, Object> map = new HashMap<>();
 
-        
+        response.setCharacterEncoding("utf-8");
+        Cookie token = CookieUtil.getCookie(request.getCookies(), "token");
+        if (token == null || !TokenUtil.verifyToken(token.getValue())) {
+            map.put("msg", "Invalid token.");
+            map.put("result", "-1");
+            response.getWriter().write(JSONObject.toJSONString(map));
+            return map;
+        }
+
+        Map<String, Object> userMap = TokenUtil.getHeader(token.getValue());
+        User user = userService.selectUserByUID((int)userMap.get("uID"));
+        if (password.get("oldPassword") == null || password.get("newPassword") == null) {
+            map.put("msg", "Password form is incomplete.");
+            map.put("result", "-1");
+        } else if (password.get("oldPassword").equals(password.get("newPassword"))) {
+            map.put("msg", "New password needs to be different.");
+            map.put("result", "-1");
+        } else if (!user.getPassWord().equals(password.get("oldPassword"))) {
+            map.put("msg", "Old password is incorrect.");
+            map.put("result", "-1");
+        } else {
+            user.setPassWord(password.get("newPassword").toString());
+            Cookie cookie = new Cookie("token", TokenUtil.makeToken(user));
+            cookie.setPath("/");
+            cookie.setMaxAge(TokenUtil.EXPIRE_TIME_MIN * 60);
+            response.addCookie(cookie);
+            map.put("msg", "Password update process is complete.");
+            map.put("result", "0");
+        }
 
         return map;
     }
