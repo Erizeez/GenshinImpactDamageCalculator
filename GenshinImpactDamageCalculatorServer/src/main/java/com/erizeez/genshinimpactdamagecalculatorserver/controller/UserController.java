@@ -119,12 +119,6 @@ public class UserController {
 
         response.setCharacterEncoding("utf-8");
         Cookie token = CookieUtil.getCookie(request.getCookies(), "token");
-        if (token == null || !TokenUtil.verifyToken(token.getValue())) {
-            map.put("msg", "Invalid token.");
-            map.put("result", "-1");
-            response.getWriter().write(JSONObject.toJSONString(map));
-            return map;
-        }
 
         Map<String, Object> userMap = TokenUtil.getHeader(token.getValue());
         User user = userService.selectUserByUID((int)userMap.get("uID"));
@@ -139,6 +133,7 @@ public class UserController {
             map.put("result", "-1");
         } else {
             user.setPassWord(password.get("newPassword").toString());
+            userService.updateUser(user);
             Cookie cookie = new Cookie("token", TokenUtil.makeToken(user));
             cookie.setPath("/");
             cookie.setMaxAge(TokenUtil.EXPIRE_TIME_MIN * 60);
