@@ -106,4 +106,14 @@ public class UserController {
 
         return map;
     }
+
+    @RequestMapping(value = "/update/password", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> updatePassword(@RequestBody User update_form, HttpServletResponse response) throws IOException{
+        Map<String, Object> map = new HashMap<>();
+
+        
+
+        return map;
+    }
 }
