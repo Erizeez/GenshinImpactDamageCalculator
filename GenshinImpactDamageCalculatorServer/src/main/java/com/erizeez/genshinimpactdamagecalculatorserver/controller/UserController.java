@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.security.Provider;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
@@ -122,6 +123,7 @@ public class UserController {
 
         Map<String, Object> userMap = TokenUtil.getHeader(token.getValue());
         User user = userService.selectUserByUID((int)userMap.get("uID"));
+
         if (password.get("oldPassword") == null || password.get("newPassword") == null) {
             map.put("msg", "Password form is incomplete.");
             map.put("result", "-1");
@@ -147,10 +149,28 @@ public class UserController {
 
     @RequestMapping(value = "/update/info", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> updateInfo(@RequestBody User userInfo, HttpServletRequest request, HttpServletResponse response) throws IOException{
+    public Map<String, Object> updateInfo(@RequestBody Map<String, Object> userInfo, HttpServletRequest request, HttpServletResponse response) throws IOException{
         Map<String, Object> map = new HashMap<>();
+        User user = null;
 
-        
+        response.setCharacterEncoding("utf-8");
+        Cookie token = CookieUtil.getCookie(request.getCookies(), "token");
+        Map<String, Object> userMap = TokenUtil.getHeader(token.getValue());
+
+        if (userInfo.get("nickName") != null) {
+            user = userService.selectUserByUID((int)userMap.get("uID"));
+            user.setNickName(userInfo.getNickName());
+            userService.updateUser(user);
+            Cookie cookie = new Cookie("token", TokenUtil.makeToken(user));
+            cookie.setPath("/");
+            cookie.setMaxAge(TokenUtil.EXPIRE_TIME_MIN * 60);
+            response.addCookie(cookie);
+            map.put("msg", "Nickname update process is complete.");
+            map.put("result", "0");
+        } else {
+            map.put("msg", "Nickname form is incomplete.");
+            map.put("result", "-1");
+        }
 
         return map;
     }
